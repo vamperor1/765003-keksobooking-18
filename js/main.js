@@ -63,7 +63,7 @@ var getPins = function () {
   return pins;
 };
 
-var getMapPins = function () {
+var renderPins = function () {
   for (var i = 0; i < pinsNumber; i++) {
     var mapPin = pinTemplate.cloneNode(true);
     var pinAvatar = mapPin.querySelector('img');
@@ -78,4 +78,4 @@ var getMapPins = function () {
 document.querySelector('.map').classList.remove('map--faded');
 
 getPins();
-getMapPins();
+renderPins();
