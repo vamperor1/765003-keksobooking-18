@@ -151,10 +151,97 @@ var renderOfferDetails = function (pinDetails) {
   document.querySelector('.map').insertBefore(detailsFragment, document.querySelector('.map__filters-container'));
 };
 
-document.querySelector('.map').classList.remove('map--faded');
+// getPins();
 
-getPins();
+// renderPins();
 
-renderPins();
+// renderOfferDetails(pins[0]);
 
-renderOfferDetails(pins[0]);
+
+// Задание 4 - "Подробности"
+
+var PIN_START_X = 570;
+var PIN_START_Y = 375;
+var ENTER_KEYCODE = 13;
+var formFieldsets = document.querySelectorAll('.ad-form__element');
+var mainMapPin = document.querySelector('.map__pin--main');
+var addressField = document.querySelector('#address');
+var roomsNumber = document.querySelector('#room_number');
+var guestsNumber = document.querySelector('#capacity');
+
+var getFormDisabled = function () {
+  for (var i = 0; i <= formFieldsets.length - 1; i++) {
+    formFieldsets[i].setAttribute('disabled', '');
+    addressField.setAttribute('value', PIN_START_X + ', ' + PIN_START_Y);
+    addressField.setAttribute('readonly', '');
+  }
+};
+
+var getFormEnabled = function () {
+  for (var i = 0; i <= formFieldsets.length - 1; i++) {
+    formFieldsets[i].removeAttribute('disabled', '');
+    document.querySelector('.map').classList.remove('map--faded');
+    document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+  }
+};
+
+var getGuestsNumberCheck = function () {
+  var roomsSelected = roomsNumber.options.selectedIndex;
+  var roomsSelectedValue = roomsNumber.options[roomsSelected].value;
+  var guestsSelected = guestsNumber.options.selectedIndex;
+  var guestsSelectedValue = guestsNumber.options[guestsSelected].value;
+
+  if (roomsSelectedValue === '1') {
+    if (guestsSelectedValue !== '1') {
+      guestsNumber.setCustomValidity('Одна комната для одного гостя');
+    } else {
+      guestsNumber.setCustomValidity('');
+    }
+  } else {
+    if (roomsSelectedValue === '2') {
+      if (guestsSelectedValue === '3' || guestsSelectedValue === '0') {
+        guestsNumber.setCustomValidity('Две комнаты для одного или двух гостей');
+      } else {
+        guestsNumber.setCustomValidity('');
+      }
+    } else {
+      if (roomsSelectedValue === '3') {
+        if (guestsSelectedValue === '0') {
+          guestsNumber.setCustomValidity('Три комнаты для одного, двух или трех гостей');
+        } else {
+          guestsNumber.setCustomValidity('');
+        }
+      } else {
+        if (roomsSelectedValue === '100') {
+          if (guestsSelectedValue !== '0') {
+            guestsNumber.setCustomValidity('Сто комнат это не для гостей');
+          } else {
+            guestsNumber.setCustomValidity('');
+          }
+        }
+      }
+    }
+  }
+};
+
+mainMapPin.addEventListener('mousedown', function () {
+  getFormEnabled();
+}
+);
+
+mainMapPin.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    getFormEnabled();
+  }
+}
+);
+
+roomsNumber.addEventListener('change', function () {
+  getGuestsNumberCheck();
+});
+
+guestsNumber.addEventListener('change', function () {
+  getGuestsNumberCheck();
+});
+
+getFormDisabled();
