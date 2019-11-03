@@ -151,11 +151,11 @@ var renderOfferDetails = function (pinDetails) {
   document.querySelector('.map').insertBefore(detailsFragment, document.querySelector('.map__filters-container'));
 };
 
-// getPins();
+getPins();
 
-// renderPins();
+renderPins();
 
-// renderOfferDetails(pins[0]);
+renderOfferDetails(pins[0]);
 
 
 // Задание 4 - "Подробности"
