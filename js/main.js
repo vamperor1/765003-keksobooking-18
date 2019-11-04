@@ -165,24 +165,38 @@ var PIN_START_X = 570;
 var PIN_START_Y = 375;
 var ENTER_KEYCODE = 13;
 var formFieldsets = document.querySelectorAll('.ad-form__element');
+var mapFilters = document.querySelectorAll('.map__filter');
 var mainMapPin = document.querySelector('.map__pin--main');
 var addressField = document.querySelector('#address');
+var avatarLoader = document.querySelector('#avatar');
 var roomsNumber = document.querySelector('#room_number');
 var guestsNumber = document.querySelector('#capacity');
 
 var getFormDisabled = function () {
+  avatarLoader.setAttribute('disabled', '');
+  addressField.setAttribute('value', PIN_START_X + ', ' + PIN_START_Y);
+  addressField.setAttribute('readonly', '');
+
   for (var i = 0; i <= formFieldsets.length - 1; i++) {
     formFieldsets[i].setAttribute('disabled', '');
-    addressField.setAttribute('value', PIN_START_X + ', ' + PIN_START_Y);
-    addressField.setAttribute('readonly', '');
+  }
+
+  for (var j = 0; j <= mapFilters.length - 1; j++) {
+    mapFilters[j].setAttribute('disabled', '');
   }
 };
 
 var getFormEnabled = function () {
+  avatarLoader.removeAttribute('disabled', '');
+  document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+
   for (var i = 0; i <= formFieldsets.length - 1; i++) {
     formFieldsets[i].removeAttribute('disabled', '');
-    document.querySelector('.map').classList.remove('map--faded');
-    document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+  }
+
+  for (var j = 0; j <= mapFilters.length - 1; j++) {
+    mapFilters[j].removeAttribute('disabled', '');
   }
 };
 
