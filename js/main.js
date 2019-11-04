@@ -1,5 +1,5 @@
 'use strict';
-
+/*
 var MAP_COORDINATES = {
   X: {
     MIN: 0,
@@ -156,6 +156,7 @@ getPins();
 renderPins();
 
 renderOfferDetails(pins[0]);
+*/
 
 
 // Задание 4 - "Подробности"
@@ -226,15 +227,13 @@ var getGuestsNumberCheck = function () {
 
 mainMapPin.addEventListener('mousedown', function () {
   getFormEnabled();
-}
-);
+});
 
 mainMapPin.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     getFormEnabled();
   }
-}
-);
+});
 
 roomsNumber.addEventListener('change', function () {
   getGuestsNumberCheck();
