@@ -1,5 +1,5 @@
 'use strict';
-
+/*
 var MAP_COORDINATES = {
   X: {
     MIN: 0,
@@ -151,10 +151,110 @@ var renderOfferDetails = function (pinDetails) {
   document.querySelector('.map').insertBefore(detailsFragment, document.querySelector('.map__filters-container'));
 };
 
-document.querySelector('.map').classList.remove('map--faded');
-
 getPins();
 
 renderPins();
 
 renderOfferDetails(pins[0]);
+*/
+
+
+// Задание 4 - "Подробности"
+
+var PIN_START_X = 570;
+var PIN_START_Y = 375;
+var ENTER_KEYCODE = 13;
+var formFieldsets = document.querySelectorAll('.ad-form__element');
+var mapFilters = document.querySelectorAll('.map__filter');
+var mainMapPin = document.querySelector('.map__pin--main');
+var addressField = document.querySelector('#address');
+var avatarLoader = document.querySelector('#avatar');
+var roomsNumber = document.querySelector('#room_number');
+var guestsNumber = document.querySelector('#capacity');
+
+var getFormDisabled = function () {
+  avatarLoader.setAttribute('disabled', '');
+  addressField.setAttribute('value', PIN_START_X + ', ' + PIN_START_Y);
+  addressField.setAttribute('readonly', '');
+
+  for (var i = 0; i <= formFieldsets.length - 1; i++) {
+    formFieldsets[i].setAttribute('disabled', '');
+  }
+
+  for (var j = 0; j <= mapFilters.length - 1; j++) {
+    mapFilters[j].setAttribute('disabled', '');
+  }
+};
+
+var getFormEnabled = function () {
+  avatarLoader.removeAttribute('disabled', '');
+  document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+
+  for (var i = 0; i <= formFieldsets.length - 1; i++) {
+    formFieldsets[i].removeAttribute('disabled', '');
+  }
+
+  for (var j = 0; j <= mapFilters.length - 1; j++) {
+    mapFilters[j].removeAttribute('disabled', '');
+  }
+};
+
+var getGuestsNumberCheck = function () {
+  var roomsSelected = roomsNumber.options.selectedIndex;
+  var roomsSelectedValue = roomsNumber.options[roomsSelected].value;
+  var guestsSelected = guestsNumber.options.selectedIndex;
+  var guestsSelectedValue = guestsNumber.options[guestsSelected].value;
+
+  if (roomsSelectedValue === '1') {
+    if (guestsSelectedValue !== '1') {
+      guestsNumber.setCustomValidity('Одна комната для одного гостя');
+    } else {
+      guestsNumber.setCustomValidity('');
+    }
+  } else {
+    if (roomsSelectedValue === '2') {
+      if (guestsSelectedValue === '3' || guestsSelectedValue === '0') {
+        guestsNumber.setCustomValidity('Две комнаты для одного или двух гостей');
+      } else {
+        guestsNumber.setCustomValidity('');
+      }
+    } else {
+      if (roomsSelectedValue === '3') {
+        if (guestsSelectedValue === '0') {
+          guestsNumber.setCustomValidity('Три комнаты для одного, двух или трех гостей');
+        } else {
+          guestsNumber.setCustomValidity('');
+        }
+      } else {
+        if (roomsSelectedValue === '100') {
+          if (guestsSelectedValue !== '0') {
+            guestsNumber.setCustomValidity('Сто комнат это не для гостей');
+          } else {
+            guestsNumber.setCustomValidity('');
+          }
+        }
+      }
+    }
+  }
+};
+
+mainMapPin.addEventListener('mousedown', function () {
+  getFormEnabled();
+});
+
+mainMapPin.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    getFormEnabled();
+  }
+});
+
+roomsNumber.addEventListener('change', function () {
+  getGuestsNumberCheck();
+});
+
+guestsNumber.addEventListener('change', function () {
+  getGuestsNumberCheck();
+});
+
+getFormDisabled();
