@@ -1,5 +1,5 @@
 'use strict';
-/*
+
 var MAP_COORDINATES = {
   X: {
     MIN: 0,
@@ -70,9 +70,11 @@ var renderPins = function () {
   for (var i = 0; i < pinsNumber; i++) {
     var mapPin = pinTemplate.cloneNode(true);
     var pinAvatar = mapPin.querySelector('img');
+    // var pinButton = mapPin.querySelector('.map__pin');
     mapPin.setAttribute('style', 'left: ' + pins[i].location.x + 'px; ' + 'top: ' + pins[i].location.y + 'px;');
     pinAvatar.setAttribute('src', pins[i].author.avatar);
     pinAvatar.setAttribute('alt', pins[i].offer.title);
+    mapPin.setAttribute('data-id', i);
     fragment.appendChild(mapPin);
   }
   pinBlock.appendChild(fragment);
@@ -153,20 +155,22 @@ var renderOfferDetails = function (pinDetails) {
 
 getPins();
 
-renderPins();
+// renderPins();
 
-renderOfferDetails(pins[0]);
-*/
-
+// renderOfferDetails(pins[0]);
 
 // Задание 4 - "Подробности"
 
 var PIN_START_X = 570;
 var PIN_START_Y = 375;
 var ENTER_KEYCODE = 13;
+var ESC_KEYCODE = 27;
 var formFieldsets = document.querySelectorAll('.ad-form__element');
 var mapFilters = document.querySelectorAll('.map__filter');
 var mainMapPin = document.querySelector('.map__pin--main');
+var mapPinsArea = document.querySelector('.map__pins');
+var map = document.querySelector('.map');
+var form = document.querySelector('.ad-form');
 var addressField = document.querySelector('#address');
 var avatarLoader = document.querySelector('#avatar');
 var roomsNumber = document.querySelector('#room_number');
@@ -188,8 +192,8 @@ var getFormDisabled = function () {
 
 var getFormEnabled = function () {
   avatarLoader.removeAttribute('disabled', '');
-  document.querySelector('.map').classList.remove('map--faded');
-  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+  map.classList.remove('map--faded');
+  form.classList.remove('ad-form--disabled');
 
   for (var i = 0; i <= formFieldsets.length - 1; i++) {
     formFieldsets[i].removeAttribute('disabled', '');
@@ -239,14 +243,54 @@ var getGuestsNumberCheck = function () {
   }
 };
 
+var clickedPinDetails = function (evt) {
+  var mapClick = evt.target.closest('.map__pin:not(.map__pin--main)');
+  if (mapClick) {
+    var clickedPinIndex = mapClick.getAttribute('data-id');
+    renderOfferDetails(pins[clickedPinIndex]);
+
+    var detailsCloseButton = document.querySelector('.popup__close');
+    var detailsPopup = document.querySelector('.map__card');
+
+    map = document.querySelector('.map');
+
+    var closeDetails = function () {
+      map.removeChild(detailsPopup);
+      document.removeEventListener('keydown', onDetailsEscPress);
+    };
+
+    var onDetailsEscPress = function (keyPressed) {
+      if (keyPressed.keyCode === ESC_KEYCODE) {
+        closeDetails();
+      }
+    };
+
+    detailsCloseButton.addEventListener('click', function () {
+      closeDetails();
+    });
+
+    document.addEventListener('keydown', onDetailsEscPress);
+  }
+};
+
 mainMapPin.addEventListener('mousedown', function () {
-  getFormEnabled();
+  if (map.classList.contains('map--faded')) {
+    getFormEnabled();
+    renderPins();
+  }
 });
 
 mainMapPin.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    getFormEnabled();
+  if (map.classList.contains('map--faded')) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      getFormEnabled();
+      renderPins();
+    }
   }
+});
+
+mapPinsArea.addEventListener('click', function (evt) {
+  clickedPinDetails(evt);
 });
 
 roomsNumber.addEventListener('change', function () {
