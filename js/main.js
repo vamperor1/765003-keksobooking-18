@@ -119,7 +119,8 @@ var getOfferDetailFeatures = function (pinIndex) {
 var getOfferDetailPhotos = function (pinIndex) {
   var offerPhotosTemplate = offerDetail.querySelector('.popup__photo');
   var offerPhotos = offerDetail.querySelector('.popup__photos');
-  offerPhotos.removeChild(offerPhotosTemplate);
+  // offerPhotos.removeChild(offerPhotosTemplate);
+  offerPhotos.innerHTML = '';
   for (var i = 0; i <= pinIndex.offer.photos.length - 1; i++) {
     var offerPhoto = offerPhotosTemplate.cloneNode(true);
     offerPhoto.setAttribute('src', pinIndex.offer.photos[i]);
@@ -253,6 +254,7 @@ var clickedpinIndex = function (evt) {
     var closeDetails = function () {
       map.removeChild(detailsPopup);
       document.removeEventListener('keydown', onDetailsEscPress);
+      detailsCloseButton.removeEventListener('click', closeDetails);
     };
 
     var onDetailsEscPress = function (keyPressed) {
@@ -261,9 +263,7 @@ var clickedpinIndex = function (evt) {
       }
     };
 
-    detailsCloseButton.addEventListener('click', function () {
-      closeDetails();
-    });
+    detailsCloseButton.addEventListener('click', closeDetails);
 
     document.addEventListener('keydown', onDetailsEscPress);
   }
@@ -298,20 +298,3 @@ guestsNumber.addEventListener('change', function () {
 });
 
 getFormDisabled();
-
-var sum1 = function (a) {
-  var x = a + 1;
-  console.log(x);
-};
-
-var sum2 = function (a) {
-  var y = a + 1;
-  console.log(y);
-};
-
-var container = function (a) {
-  sum1(a);
-  sum2(a);
-};
-
-container(3);
